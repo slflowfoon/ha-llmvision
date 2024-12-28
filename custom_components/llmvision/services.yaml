@@ -4,7 +4,7 @@ image_analyzer:
   fields:
     provider:
       name: Provider
-      description: 'Configuration to use'
+      description: "Configuration to use"
       required: true
       selector:
         config_entry:
@@ -12,7 +12,7 @@ image_analyzer:
     model:
       name: Model
       required: false
-      description: 'Model to use. Uncheck for default.'
+      description: "Model to use. Uncheck for default."
       example: "gpt-4o-mini"
       selector:
         text:
@@ -20,7 +20,7 @@ image_analyzer:
     message:
       name: Prompt
       required: true
-      description: 'Model prompt'
+      description: "Model prompt"
       example: "Describe the image"
       selector:
         text:
@@ -28,7 +28,7 @@ image_analyzer:
     remember:
       name: Remember
       required: false
-      description: 'Remember this event so you can ask about it later'
+      description: "Remember this event so you can ask about it later"
       example: true
       default: false
       selector:
@@ -36,7 +36,7 @@ image_analyzer:
     image_file:
       name: Image File
       required: false
-      description: 'Local path to image'
+      description: "Local path to image"
       example: "/config/www/tmp/front_door.jpg"
       selector:
         text:
@@ -44,8 +44,8 @@ image_analyzer:
     image_entity:
       name: Image Entity
       required: false
-      description: 'Image or camera entity to analyze'
-      example: 'image.front_door_person'
+      description: "Image or camera entity to analyze"
+      example: "image.front_door_person"
       selector:
         entity:
           domain: ["image", "camera"]
@@ -53,7 +53,7 @@ image_analyzer:
     include_filename:
       name: Include Filename
       required: true
-      description: 'Include filename in the request'
+      description: "Include filename in the request"
       example: false
       default: false
       selector:
@@ -61,16 +61,27 @@ image_analyzer:
     target_width:
       name: Target Width
       required: false
-      description: 'Width in pixels to downscale'
+      description: "Width in pixels to downscale"
       example: 1280
       default: 1280
       selector:
         number:
           min: 512
           max: 1920
+    detail:
+      name: Detail
+      required: false
+      description: "Detail parameter. Leave empty for 'auto'"
+      default: "low"
+      example: "low"
+      selector:
+        select:
+          options:
+            - "high"
+            - "low"
     max_tokens:
       name: Maximum Tokens
-      description: 'Maximum number of tokens to generate'
+      description: "Maximum number of tokens to generate"
       required: true
       example: 100
       default: 100
@@ -81,7 +92,7 @@ image_analyzer:
     temperature:
       name: Temperature
       required: true
-      description: 'Randomness. Lower is more accurate, higher is more creative'
+      description: "Randomness. Lower is more accurate, higher is more creative"
       example: 0.2
       default: 0.2
       selector:
@@ -89,25 +100,9 @@ image_analyzer:
           min: 0.1
           max: 1.0
           step: 0.1
-    generate_title:
-      name: Generate Title
-      required: false
-      description: Generate a title. (Used for notifications and remembered events)
-      default: false
-      selector:
-        boolean:
     expose_images:
-      name: Expose Images
-      description: (Experimental) Expose analyzed frames after processing. This will save analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
-      required: false
-      example: false
-      default: false
-      selector:
-        boolean:
-    expose_images_persist:
-      name: Persist Exposed Images
-      description: (Experimental) Normally exposed images are re-written with each new event. Setting this to true will include the Frigate eventID, if available, as part of the filename. If there is no 
-          Frigate eventID, a uid will be used instead.
+      name: Expose MP4 and Images
+      description: Expose MP4 and analyzed frames after processing. This will save an MP4 and analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
       required: false
       example: false
       default: false
@@ -120,7 +115,7 @@ video_analyzer:
   fields:
     provider:
       name: Provider
-      description: 'Configuration to use'
+      description: "Configuration to use"
       required: true
       selector:
         config_entry:
@@ -128,7 +123,7 @@ video_analyzer:
     model:
       name: Model
       required: false
-      description: 'Model to use. Uncheck for default.'
+      description: "Model to use. Uncheck for default."
       example: "gpt-4o-mini"
       selector:
         text:
@@ -136,7 +131,7 @@ video_analyzer:
     message:
       name: Prompt
       required: true
-      description: 'Model prompt'
+      description: "Model prompt"
       example: "Describe what happens in the video"
       selector:
         text:
@@ -144,7 +139,7 @@ video_analyzer:
     remember:
       name: Remember
       required: false
-      description: 'Remember this event so you can ask about it later'
+      description: "Remember this event so you can ask about it later"
       example: true
       default: false
       selector:
@@ -152,7 +147,7 @@ video_analyzer:
     video_file:
       name: Video File
       required: false
-      description: 'Local path to video'
+      description: "Local path to video"
       example: "/config/www/recordings/front_door.mp4"
       selector:
         text:
@@ -160,35 +155,11 @@ video_analyzer:
     event_id:
       name: Frigate Event ID
       required: false
-      description: 'Frigate Event ID'
+      description: "Frigate Event ID"
       example: 1712108310.968815-r28cdt
       selector:
         text:
           multiline: true
-    frigate_retry_attempts:
-      name: Frigate Retry Attempts
-      description: How many times to retry fetching the video clip from Frigate. Clips are not always available from Frigate as soon as the event has ended.  
-          Slower machines or longer clips may need additional attempts. Increase this if you see errors fetching the clips from Frigate in your automation traces.
-      required: false
-      example: 2
-      default: 2
-      selector:
-        number:
-          min: 1
-          max: 10
-          step: 1
-    frigate_retry_seconds:
-      name: Frigate Retry Seconds
-      description: How long to wait between retries to fetch the video clip from Frigate. Clips are not always available from Frigate as soon as the event has ended.  
-          Slower machines or longer clips may need additional attempts. Increase this if you see errors fetching the clips from Frigate in your automation traces.
-      required: false
-      example: 1
-      default: 1
-      selector:
-        number:
-          min: 1
-          max: 10
-          step: 1
     max_frames:
       name: Max Frames
       description: How many frames to analyze. Picks frames with the most movement.
@@ -198,12 +169,12 @@ video_analyzer:
       selector:
         number:
           min: 1
-          max: 10
+          max: 20
           step: 1
     include_filename:
       name: Include Filename
       required: true
-      description: 'Include filename in the request'
+      description: "Include filename in the request"
       example: false
       default: false
       selector:
@@ -211,16 +182,27 @@ video_analyzer:
     target_width:
       name: Target Width
       required: false
-      description: 'Width in pixels to downscale'
+      description: "Width in pixels to downscale"
       example: 1280
       default: 1280
       selector:
         number:
           min: 512
           max: 1920
+    detail:
+      name: Detail
+      required: false
+      description: "Detail parameter, leave empty for 'auto'"
+      default: "low"
+      example: "low"
+      selector:
+        select:
+          options:
+            - "high"
+            - "low"
     max_tokens:
       name: Maximum Tokens
-      description: 'Maximum number of tokens to generate'
+      description: "Maximum number of tokens to generate"
       required: true
       example: 100
       default: 100
@@ -231,7 +213,7 @@ video_analyzer:
     temperature:
       name: Temperature
       required: true
-      description: 'Randomness. Lower is more accurate, higher is more creative'
+      description: "Randomness. Lower is more accurate, higher is more creative"
       example: 0.2
       default: 0.2
       selector:
@@ -239,25 +221,9 @@ video_analyzer:
           min: 0.0
           max: 1.0
           step: 0.1
-    generate_title:
-      name: Generate Title
-      required: false
-      description: Generate a title. (Used for notifications and remembered events)
-      default: false
-      selector:
-        boolean:
     expose_images:
-      name: Expose Images
-      description: (Experimental) Expose analyzed frames after processing. This will save analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
-      required: false
-      example: false
-      default: false
-      selector:
-        boolean:
-    expose_images_persist:
-      name: Persist Exposed Images
-      description: (Experimental) Normally exposed images are re-written with each new event. Setting this to true will include the Frigate eventID, if available, as part of the filename. If there is no 
-          Frigate eventID, a uid will be used instead.
+      name: Expose MP4 and Images
+      description: Expose MP4 and analyzed frames after processing. This will save an MP4 and analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
       required: false
       example: false
       default: false
@@ -270,7 +236,7 @@ stream_analyzer:
   fields:
     provider:
       name: Provider
-      description: 'Configuration to use'
+      description: "Configuration to use"
       required: true
       selector:
         config_entry:
@@ -278,7 +244,7 @@ stream_analyzer:
     model:
       name: Model
       required: false
-      description: 'Model to use. Uncheck for default.'
+      description: "Model to use. Uncheck for default."
       example: "gpt-4o-mini"
       selector:
         text:
@@ -286,7 +252,7 @@ stream_analyzer:
     message:
       name: Prompt
       required: true
-      description: 'Model prompt'
+      description: "Model prompt"
       example: "Describe what happens in the camera feed"
       selector:
         text:
@@ -294,7 +260,7 @@ stream_analyzer:
     remember:
       name: Remember
       required: false
-      description: 'Remember this event so you can ask about it later'
+      description: "Remember this event so you can ask about it later"
       example: true
       default: false
       selector:
@@ -302,8 +268,8 @@ stream_analyzer:
     image_entity:
       name: Camera Entity
       required: true
-      description: 'Camera entity to stream'
-      example: 'camera.front_door'
+      description: "Camera entity to stream"
+      example: "camera.front_door"
       selector:
         entity:
           domain: ["camera"]
@@ -311,7 +277,7 @@ stream_analyzer:
     duration:
       name: Recording Duration
       required: true
-      description: 'How long to record in seconds'
+      description: "How long to record in seconds"
       example: 5
       default: 5
       selector:
@@ -327,12 +293,12 @@ stream_analyzer:
       selector:
         number:
           min: 1
-          max: 10
+          max: 20
           step: 1
     include_filename:
       name: Include camera name
       required: true
-      description: 'Include camera name in request'
+      description: "Include camera name in request"
       example: false
       default: false
       selector:
@@ -340,16 +306,27 @@ stream_analyzer:
     target_width:
       name: Target Width
       required: false
-      description: 'Width in pixels to downscale'
+      description: "Width in pixels to downscale"
       example: 1280
       default: 1280
       selector:
         number:
           min: 512
           max: 1920
+    detail:
+      name: Detail
+      required: false
+      description: "Detail parameter, leave empty for 'auto'"
+      default: "low"
+      example: "low"
+      selector:
+        select:
+          options:
+            - "high"
+            - "low"
     max_tokens:
       name: Maximum Tokens
-      description: 'Maximum number of tokens to generate'
+      description: "Maximum number of tokens to generate"
       required: true
       example: 100
       default: 100
@@ -360,7 +337,7 @@ stream_analyzer:
     temperature:
       name: Temperature
       required: true
-      description: 'Randomness. Lower is more accurate, higher is more creative'
+      description: "Randomness. Lower is more accurate, higher is more creative"
       example: 0.2
       default: 0.2
       selector:
@@ -368,16 +345,9 @@ stream_analyzer:
           min: 0.1
           max: 1.0
           step: 0.1
-    generate_title:
-      name: Generate Title
-      required: false
-      description: Generate a title. (Used for notifications and remembered events)
-      default: false
-      selector:
-        boolean:
     expose_images:
-      name: Expose Images
-      description: (Experimental) Expose analyzed frames after processing. This will save analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
+      name: Expose MP4 and Images
+      description: Expose MP4 and analyzed frames after processing. This will save an MP4 and analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
       required: false
       example: false
       default: false
@@ -390,7 +360,7 @@ data_analyzer:
   fields:
     provider:
       name: Provider
-      description: 'Configuration to use'
+      description: "Configuration to use"
       required: true
       selector:
         config_entry:
@@ -398,7 +368,7 @@ data_analyzer:
     model:
       name: Model
       required: false
-      description: 'Model to use. Uncheck for default.'
+      description: "Model to use. Uncheck for default."
       example: "gpt-4o-mini"
       selector:
         text:
@@ -406,7 +376,7 @@ data_analyzer:
     message:
       name: Prompt
       required: true
-      description: 'Describe what should be extracted from the image. Data types and available options will be recognized automatically based the provided sensor.'
+      description: "Describe what should be extracted from the image. Data types and available options will be recognized automatically based the provided sensor."
       example: "How many cars are parked?"
       default: "How many cars are parked?"
       selector:
@@ -420,11 +390,20 @@ data_analyzer:
         entity:
           multiple: false
           filter:
-            domain: ["number", "input_number", "text", "input_text", "input_boolean", "select", "input_select"]
+            domain:
+              [
+                "number",
+                "input_number",
+                "text",
+                "input_text",
+                "input_boolean",
+                "select",
+                "input_select",
+              ]
     image_file:
       name: Image File
       required: false
-      description: 'Local path to image'
+      description: "Local path to image"
       example: "/config/www/tmp/front_door.jpg"
       selector:
         text:
@@ -432,8 +411,8 @@ data_analyzer:
     image_entity:
       name: Image Entity
       required: false
-      description: 'Image or camera entity to analyze'
-      example: 'image.front_door_person'
+      description: "Image or camera entity to analyze"
+      example: "image.front_door_person"
       selector:
         entity:
           domain: ["image", "camera"]
@@ -441,7 +420,7 @@ data_analyzer:
     include_filename:
       name: Include Filename
       required: true
-      description: 'Include filename in the request'
+      description: "Include filename in the request"
       example: false
       default: false
       selector:
@@ -449,16 +428,27 @@ data_analyzer:
     target_width:
       name: Target Width
       required: false
-      description: 'Width in pixels to downscale'
+      description: "Width in pixels to downscale"
       example: 1280
       default: 1280
       selector:
         number:
           min: 512
           max: 1920
+    detail:
+      name: Detail
+      required: false
+      description: "Detail parameter. Leave empty for 'auto'"
+      default: "high"
+      example: "high"
+      selector:
+        select:
+          options:
+            - "high"
+            - "low"
     max_tokens:
       name: Maximum Tokens
-      description: 'Maximum number of tokens to generate. A low value is recommended since this will likely result in a number.'
+      description: "Maximum number of tokens to generate. A low value is recommended since this will likely result in a number."
       required: true
       example: 5
       default: 5
@@ -469,7 +459,7 @@ data_analyzer:
     temperature:
       name: Temperature
       required: true
-      description: 'Randomness. Lower is more accurate, higher is more creative. 0.1 is recommended for best accuracy.'
+      description: "Randomness. Lower is more accurate, higher is more creative. 0.1 is recommended for best accuracy."
       example: 0.1
       default: 0.1
       selector:
