@@ -231,7 +231,7 @@ class MediaProcessor:
                     "-y",
                     "-framerate", str(self.video_target_fps),
                     "-i", os.path.join(tmp_frames_dir, "frame_%04d.jpg"),
-                    "-c:v", "ultrafast",
+                    "-c:v", "libx264",
                     "-pix_fmt", "yuv420p",
                     "-vf", f"scale={self.video_target_width}:-1",
                     video_path
