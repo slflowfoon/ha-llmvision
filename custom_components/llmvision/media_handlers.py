@@ -138,7 +138,7 @@ class MediaProcessor:
 
         return base64_image
 
-    async def record(self, image_entities, duration, max_frames, target_width, include_filename, expose_images, save_video=True):
+    async def record(self, image_entities, duration, max_frames, target_width, include_filename, expose_images):
         """Wrapper for client.add_frame with integrated recorder
 
         Args:
@@ -158,7 +158,7 @@ class MediaProcessor:
             previous_frame = None
             iteration_time = 0
             
-            if save_video:
+            if expose_images:
                 timestamp = time.strftime("%Y%m%d%H%M%S")
                 tmp_frames_dir = f"/config/custom_components/{DOMAIN}/tmp_frames_{image_entity.replace('camera.', '')}_{timestamp}"
                 await self.hass.loop.run_in_executor(None, partial(os.makedirs, tmp_frames_dir, exist_ok=True))
@@ -205,7 +205,7 @@ class MediaProcessor:
                     # Initialize previous_frame with the first frame
                     previous_frame = current_frame_gray
 
-                if save_video:
+                if expose_images:
                     frame_path = os.path.join(tmp_frames_dir, f"frame_{frame_counter:04d}.jpg")
                     await self.hass.loop.run_in_executor(None, img.save, frame_path)
                     frame_paths.append(frame_path)
@@ -224,7 +224,7 @@ class MediaProcessor:
 
                 await asyncio.sleep(adjusted_interval)
             
-            if save_video and frame_paths:
+            if expose_images and frame_paths:
                 video_path = f"/config/www/llmvision/{image_entity.replace('camera.', '')}.mp4"
                 ffmpeg_cmd = [
                     "ffmpeg",
@@ -457,7 +457,7 @@ class MediaProcessor:
             _LOGGER.info(f"Failed to delete tmp folders: {e}")
         return self.client
 
-    async def add_streams(self, image_entities, duration, max_frames, target_width, include_filename, expose_images, save_video=True):
+    async def add_streams(self, image_entities, duration, max_frames, target_width, include_filename, expose_images):
         if image_entities:
             await self.record(
                 image_entities=image_entities,
@@ -465,8 +465,7 @@ class MediaProcessor:
                 max_frames=max_frames,
                 target_width=target_width,
                 include_filename=include_filename,
-                expose_images=expose_images,
-                save_video=save_video
+                expose_images=expose_images
             )
         return self.client
 
