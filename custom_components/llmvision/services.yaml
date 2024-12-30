@@ -101,8 +101,8 @@ image_analyzer:
           max: 1.0
           step: 0.1
     expose_images:
-      name: Expose MP4 and Images
-      description: Expose MP4 and analyzed frames after processing. This will save an MP4 and analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
+      name: Expose Images
+      description: (Experimental) Expose analyzed frames after processing. This will save analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
       required: false
       example: false
       default: false
@@ -222,8 +222,8 @@ video_analyzer:
           max: 1.0
           step: 0.1
     expose_images:
-      name: Expose MP4 and Images
-      description: Expose MP4 and analyzed frames after processing. This will save an MP4 and analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
+      name: Expose Images
+      description: (Experimental) Expose analyzed frames after processing. This will save analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
       required: false
       example: false
       default: false
@@ -274,6 +274,17 @@ stream_analyzer:
         entity:
           domain: ["camera"]
           multiple: true
+    interval:
+      name: Frame Capture Interval
+      required: true
+      description: "How often to capture frames from stream in seconds"
+      example: 1
+      default: 0.5
+      selector:
+        number:
+          min: 0.1
+          max: 20
+          step: 0.1
     duration:
       name: Recording Duration
       required: true
@@ -346,13 +357,41 @@ stream_analyzer:
           max: 1.0
           step: 0.1
     expose_images:
-      name: Expose MP4 and Images
-      description: Expose MP4 and analyzed frames after processing. This will save an MP4 and analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
+      name: Expose Images
+      description: Expose analyzed frames after processing. This will save the analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
       required: false
       example: false
       default: false
       selector:
         boolean:
+    expose_video:
+      name: Record & Expose MP4
+      description: Record and expose MP4 recording. This will save an MP4 recording in /www/llmvision so it can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
+      required: false
+      example: false
+      default: false
+      selector:
+        boolean:
+    video_target_fps:
+      name: MP4 Target FPS
+      required: false
+      description: "Target FPS for MP4"
+      example: 4
+      default: 4
+      selector:
+        number:
+          min: 1
+          max: 15
+    video_target_width:
+      name: MP4 Target Width
+      required: false
+      description: "Target width for MP4"
+      example: 512
+      default: 512
+      selector:
+        number:
+          min: 512
+          max: 1920
 
 data_analyzer:
   name: Data Analyzer
