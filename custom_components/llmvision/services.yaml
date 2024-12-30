@@ -358,7 +358,7 @@ stream_analyzer:
           step: 0.1
     expose_images:
       name: Expose Images
-      description: Expose analyzed frames after processing. This will save the analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
+      description: (Experimental) Expose analyzed frames after processing. This will save analyzed frames in /www/llmvision so they can be used for notifications. (Only works for entity input, include camera name should be enabled). Existing files will be overwritten.
       required: false
       example: false
       default: false
